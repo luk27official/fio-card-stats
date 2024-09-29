@@ -1,3 +1,6 @@
+import parse from "csv-simple-parser";
+export type CSVData = { [key: string]: string; }[];
+
 export function loadCSV(file: File): Promise<string> {
     const reader = new FileReader();
 
@@ -14,4 +17,8 @@ export function loadCSV(file: File): Promise<string> {
 
         reader.readAsText(file);
     });
+}
+
+export function parseCSV(data: string): CSVData[] {
+    return parse(data, { delimiter: ";", header: true }) as CSVData[];
 }
