@@ -12,6 +12,8 @@ export type FioCSVData = {
     "Typ": string;
 };
 
+export type CategorizedFioCSVData = FioCSVData & { category: string; };
+
 export function loadCSV(file: File): Promise<string> {
     const reader = new FileReader();
 
