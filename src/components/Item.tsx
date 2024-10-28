@@ -26,7 +26,7 @@ function Item({ itemName }: { itemName: string; }) {
     }, [itemName]); // dependencies to ensure it runs only on mount
 
     // should correspond to CategoryName defined in utils/customTypes.ts
-    const categories: CategoryName[] = ["food", "travel", "ATM", "freetime", "other"] as const;
+    const categories: CategoryName[] = ["food", "travel", "ATM", "freetime", "income", "living", "other"] as const;
 
     // save the category to the localStorage on change
     const saveCategory = (e: ChangeEvent<HTMLSelectElement>) => {

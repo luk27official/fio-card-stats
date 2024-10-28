@@ -35,3 +35,15 @@ export function loadCSV(file: File): Promise<string> {
 export function parseCSV(data: string): FioCSVData[] {
     return parse(data, { delimiter: ";", header: true }) as FioCSVData[];
 }
+
+export function getPaymentInformation(data: FioCSVData) {
+    if (data["Zpráva pro příjemce"]) {
+        return data["Zpráva pro příjemce"];
+    }
+
+    if (data["Poznámka"]) {
+        return data["Poznámka"];
+    }
+
+    return "No payment information. Type: " + data["Typ"];
+}

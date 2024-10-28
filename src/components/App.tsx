@@ -1,8 +1,9 @@
 import './App.css';
 import { ChangeEvent, useState } from 'react';
-import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData } from "../utils/csvUtils";
+import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
+import CategoryDetails from "./CategoryDetails";
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
 
   const uniqueItems = parsedData.reduce((acc: string[], item: FioCSVData) => {
 
-    const it = item["Zpráva pro příjemce"].split(",")[0].replace("Nákup:", "").trim();
+    const it = getPaymentInformation(item).split(",")[0].replace("Nákup:", "").trim();
 
     if (!acc.includes(it)) {
       acc.push(it);
@@ -33,7 +34,7 @@ function App() {
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
       return {
         ...item,
-        category: (document.getElementsByName(item["Zpráva pro příjemce"].split(",")[0].replace("Nákup:", "").trim())[0] as unknown as HTMLSelectElement).value
+        category: (document.getElementsByName(getPaymentInformation(item).split(",")[0].replace("Nákup:", "").trim())[0] as unknown as HTMLSelectElement).value
       };
     });
 
@@ -53,31 +54,20 @@ function App() {
 
   return (
     <div id="main">
-      <h1>Fio Card data</h1>
+      <span className="fancy-header">Fio Card data</span>
       <FileInput onChange={onChange} />
-      {uniqueItems.map((item) => <Item itemName={item} />)}
-      <div>
-        <input type="submit" value="Submit" onClick={handleClick} />
-        <br />
-        grouped data:
-        {Object.keys(categorizedData).map((category, index) => (
-          <div key={index}>
-            <h2>{category}</h2>
-            {categorizedData[category].map((item, index) => (
-              <div key={index}>
-                {item["Zpráva pro příjemce"]}
-              </div>
-            ))}
-            <div>
-              <strong>Total:</strong> {categorizedData[category].reduce((sum, item) => {
-                const match = item["Zpráva pro příjemce"].match(/(\d+[\.,]?\d*)\s*CZK/);
-                const amount = match ? parseFloat(match[1].replace(",", ".")) : 0;
-                return sum + amount;
-              }, 0).toFixed(2)} CZK
-            </div>
-          </div>
-        ))}
+      <div className="items-list">
+        {uniqueItems.map((item) => <Item itemName={item} />)}
       </div>
+      {parsedData.length > 0 && <>
+        <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />
+        <hr className="styled-hr" />
+        <div className="category-list">
+          {Object.keys(categorizedData).map((category, index) => (
+            <CategoryDetails category={category} categorizedData={categorizedData} key={index} />
+          ))}
+        </div>
+      </>}
     </div>
   );
 }
