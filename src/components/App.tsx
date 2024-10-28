@@ -10,6 +10,7 @@ import { CategoryName } from "../utils/customTypes";
 function App() {
   const [parsedData, setParsedData] = useState<FioCSVData[]>([]);
   const [categorizedData, setCategorizedData] = useState<Record<CategoryName, CategorizedFioCSVData[]>>(() => ({} as Record<CategoryName, CategorizedFioCSVData[]>));
+  const [showHelp, setShowHelp] = useState<boolean>(false);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -53,21 +54,38 @@ function App() {
     setCategorizedData(groupedData);
   };
 
+  const handleHelpClick = () => {
+    setShowHelp(!showHelp);
+  };
+
   return (
     <div id="main">
       <span className="fancy-header">Fio Card data</span>
-      <FileInput onChange={onChange} />
-      <div className="items-list">
-        {uniqueItems.map((item) => <Item itemName={item} />)}
+      <div>
+        <a href="#" onClick={() => handleHelpClick()}>Help</a>
+        <span> | </span>
+        <a href="https://github.com/luk27official/fio-card-stats">GitHub</a>
       </div>
-      {parsedData.length > 0 && <>
-        <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />
-        <hr className="styled-hr" />
-        <div className="category-list">
-          {Object.keys(categorizedData).map((category, index) => (
-            <CategoryDetails category={category as CategoryName} categorizedData={categorizedData} key={index} />
-          ))}
+      {showHelp && <div className="help">
+        The usage is simple. Just upload your Fio Card data in CSV format. Then you can categorize your payments by selecting the category from the dropdown menu.
+        The categories are saved in the local storage so you don't have to categorize them again. Data is neither stored nor sent to any server.
+        <br />
+        <a href="#" onClick={() => handleHelpClick()} style={{ fontSize: "1rem" }}>Back to upload</a>
+      </div>}
+      {!showHelp && <>
+        <FileInput onChange={onChange} />
+        <div className="items-list">
+          {uniqueItems.map((item) => <Item itemName={item} key={item} />)}
         </div>
+        {parsedData.length > 0 && <>
+          <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />
+          <hr className="styled-hr" />
+          <div className="category-list">
+            {Object.keys(categorizedData).map((category, index) => (
+              <CategoryDetails category={category as CategoryName} categorizedData={categorizedData} key={index} />
+            ))}
+          </div>
+        </>}
       </>}
     </div>
   );

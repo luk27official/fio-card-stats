@@ -61,3 +61,10 @@
     margin: 20px 0;
     width: 90%;
 }
+
+.help {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+    width: 50%;
+}
