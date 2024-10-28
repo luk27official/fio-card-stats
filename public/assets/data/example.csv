@@ -1,0 +1,7 @@
+"Zdrojový účet";"Datum";"Objem";"Měna";"Protiúčet";"Kód banky";"Zpráva pro příjemce";"Poznámka";"Typ"
+"1234567890";"31.08.2024";"-1000";"CZK";"";"";"Výběr z bankomatu: CESKA SPORITELNA, A.S., CZE, dne 30.8.2024, částka  1000.00 CZK";"Výběr z bankomatu: CESKA SPORITELNA, A.S., CZE, dne 30.8.2024, částka  1000.00 CZK";"Karetní transakce"
+"1234567890";"17.09.2024";"6750";"CZK";"";"";"Vyplata";"Zamestnavatel";"Bezhotovostní příjem"
+"1234567890";"28.09.2024";"-50";"CZK";"";"";"Nákup: Operator ICT - Aplika,  Delnicka 213/12, Praha 7, 17000, CZE, dne 27.9.2024, částka  50.00 CZK";"Nákup: Operator ICT - Aplika,  Delnicka 213/12, Praha 7, 17000, CZE, dne 27.9.2024, částka  50.00 CZK";"Karetní transakce"
+"1234567890";"28.09.2024";"-199";"CZK";"";"";"Nákup: www.cd.cz/eshop/,  nab. Ludvika Svobody 122, Praha 1, 11016, CZE, dne 27.9.2024, částka  199.00 CZK";"Nákup: www.cd.cz/eshop/,  nab. Ludvika Svobody 122, Praha 1, 11016, CZE, dne 27.9.2024, částka  199.00 CZK";"Karetní transakce"
+"1234567890";"29.09.2024";"-473,6";"CZK";"";"";"Nákup: Dekujeme, foodora.cz,  Smrckova 2485/4, Liben,, Prague 8, 118 00, CZE, dne 28.9.2024, částka  473.60 CZK";"Nákup: Dekujeme, foodora.cz,  Smrckova 2485/4, Liben,, Prague 8, 118 00, CZE, dne 28.9.2024, částka  473.60 CZK";"Karetní transakce"
+"1234567890";"29.09.2024";"-350";"CZK";"";"";"Nákup: GOPAY * O2  GOPAY  *,  Za Brumlovkou 266/2, dobijeni.o2.c, 140 22, CZE, dne 28.9.2024, částka  350.00 CZK";"Nákup: GOPAY * O2  GOPAY  *,  Za Brumlovkou 266/2, dobijeni.o2.c, 140 22, CZE, dne 28.9.2024, částka  350.00 CZK";"Karetní transakce"
