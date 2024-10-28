@@ -4,11 +4,12 @@ import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInforma
 import Item from "./Item";
 import FileInput from "./FileInput";
 import CategoryDetails from "./CategoryDetails";
+import { CategoryName } from "../utils/customTypes";
 
 
 function App() {
   const [parsedData, setParsedData] = useState<FioCSVData[]>([]);
-  const [categorizedData, setCategorizedData] = useState<Record<string, CategorizedFioCSVData[]>>({});
+  const [categorizedData, setCategorizedData] = useState<Record<CategoryName, CategorizedFioCSVData[]>>(() => ({} as Record<CategoryName, CategorizedFioCSVData[]>));
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -64,7 +65,7 @@ function App() {
         <hr className="styled-hr" />
         <div className="category-list">
           {Object.keys(categorizedData).map((category, index) => (
-            <CategoryDetails category={category} categorizedData={categorizedData} key={index} />
+            <CategoryDetails category={category as CategoryName} categorizedData={categorizedData} key={index} />
           ))}
         </div>
       </>}
