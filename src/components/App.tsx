@@ -22,6 +22,9 @@ function App() {
   };
 
   const uniqueItems = parsedData.reduce((acc: string[], item: FioCSVData) => {
+    if (!item) {
+      return acc;
+    }
 
     const it = getPaymentInformation(item).split(",")[0].replace("Nákup:", "").trim();
 
@@ -46,6 +49,10 @@ function App() {
         acc[item.category] = [];
       }
 
+      if (!item["Datum"]) {
+        return acc;
+      }
+
       acc[item.category].push(item);
 
       return acc;
@@ -64,12 +71,16 @@ function App() {
       <div>
         <a href="#" onClick={() => handleHelpClick()}>Help</a>
         <span> | </span>
-        <a href="https://github.com/luk27official/fio-card-stats">GitHub</a>
+        <a href="https://github.com/luk27official/fio-card-stats" target="_blank">GitHub</a>
+        <span> | </span>
+        <a href="/assets/data/example.csv">Download example CSV</a>
       </div>
       {showHelp && <div className="help">
         The usage is simple. Just upload your Fio Card data in CSV format. Then you can categorize your payments by selecting the category from the dropdown menu.
         The categories are saved in the local storage so you don't have to categorize them again. Data is neither stored nor sent to any server.
         <br />
+        Použití nástroje je jednoduché. Stačí nahrát data z Fio banky ve formátu CSV. Poté můžete kategorizovat platby výběrem kategorie z rozbalovacího menu.
+        Kategorie jsou ukládány v lokálním úložišti, takže je nemusíte znovu kategorizovat. Data nejsou ukládána ani odesílána na žádný server.
         <a href="#" onClick={() => handleHelpClick()} style={{ fontSize: "1rem" }}>Back to upload</a>
       </div>}
       {!showHelp && <>
