@@ -110,7 +110,7 @@ function App() {
         {submitted && <>
           <hr className="styled-hr" />
           <div className="category-list">
-            {Object.keys(categorizedData).map((category, index) => (
+            {Object.keys(categorizedData).sort().map((category, index) => (
               <CategoryBaseInfo category={category as CategoryName} categorizedData={categorizedData} key={index} setShownDetailedCategory={setShownDetailedCategory} />
             ))}
           </div>
