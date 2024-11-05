@@ -1,5 +1,5 @@
 import './App.css';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
@@ -12,6 +12,7 @@ function App() {
   const [categorizedData, setCategorizedData] = useState<Record<CategoryName, CategorizedFioCSVData[]>>(() => ({} as Record<CategoryName, CategorizedFioCSVData[]>));
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [shownDetailedCategory, setShownDetailedCategory] = useState<CategoryName | null>(null);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -59,12 +60,17 @@ function App() {
       return acc;
     }, {});
 
+    setSubmitted(true);
     setCategorizedData(groupedData);
   };
 
   const handleHelpClick = () => {
     setShowHelp(!showHelp);
   };
+
+  const totalSum = useMemo(() => {
+    return parsedData.reduce((acc, item) => acc + parseFloat(item["Objem"] === undefined ? "0" : item["Objem"].replace(',', '.')), 0).toFixed(2);
+  }, [parsedData]);
 
   return (
     <div id="main">
@@ -89,13 +95,18 @@ function App() {
         <div className="items-list">
           {uniqueItems.map((item) => <Item itemName={item} key={item} />)}
         </div>
-        {parsedData.length > 0 && <>
-          <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />
+        {parsedData.length > 0 && <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />}
+        {submitted && <>
           <hr className="styled-hr" />
           <div className="category-list">
             {Object.keys(categorizedData).map((category, index) => (
               <CategoryBaseInfo category={category as CategoryName} categorizedData={categorizedData} key={index} setShownDetailedCategory={setShownDetailedCategory} />
             ))}
+          </div>
+          <hr className="styled-hr" style={{ width: "25%" }} />
+          <div className="category-final-stats">
+            {/* TODO: handle different currencies */}
+            <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{totalSum} CZK</span></strong>
           </div>
           {shownDetailedCategory &&
             <>
