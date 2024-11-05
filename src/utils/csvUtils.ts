@@ -1,4 +1,5 @@
 import parse from "csv-simple-parser";
+import { CategoryName } from "./customTypes";
 
 export type FioCSVData = {
     "Zdrojový účet": string;
@@ -12,7 +13,7 @@ export type FioCSVData = {
     "Typ": string;
 };
 
-export type CategorizedFioCSVData = FioCSVData & { category: string; };
+export type CategorizedFioCSVData = FioCSVData & { category: CategoryName; };
 
 export function loadCSV(file: File): Promise<string> {
     const reader = new FileReader();
