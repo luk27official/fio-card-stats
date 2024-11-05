@@ -34,7 +34,7 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
                 <span style={{
                     color: categorySum >= 0 ? "green" : "red"
                 }}>
-                    {categorySum.toFixed(2)} CZK
+                    {categorySum.toFixed(1)} CZK
                 </span>
                 <br />
                 <strong>Number of transactions: </strong>

@@ -6,6 +6,7 @@ import FileInput from "./FileInput";
 import { CategoryBaseInfo, CategoryDetails } from "./CategoryDetails";
 import { CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
 import { convertToCZK } from "../utils/otherUtils";
+import CategoryChart from "./CategoryChart";
 
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
       return {
         ...item,
-        category: (document.getElementsByName(getPaymentInformation(item))[0] as unknown as HTMLSelectElement).value
+        category: (document.getElementsByName(getPaymentInformation(item))[0] as unknown as HTMLSelectElement).value as CategoryName
       };
     });
 
@@ -80,7 +81,7 @@ function App() {
       sum += convertToCZK(record["Objem"].replace(",", "."), record["Měna"]);
     }
 
-    return sum.toFixed(2);
+    return sum.toFixed(1);
   }, [parsedData]);
 
   return (
@@ -115,6 +116,7 @@ function App() {
             ))}
           </div>
           <hr className="styled-hr" style={{ width: "25%" }} />
+          <CategoryChart categorizedData={categorizedData} />
           <div className="category-final-stats">
             <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{totalSum} CZK</span></strong>
           </div>
