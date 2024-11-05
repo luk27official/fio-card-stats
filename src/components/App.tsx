@@ -27,7 +27,7 @@ function App() {
       return acc;
     }
 
-    const it = getPaymentInformation(item).split(",")[0].replace("Nákup:", "").trim();
+    const it = getPaymentInformation(item);
 
     if (!acc.includes(it)) {
       acc.push(it);
@@ -40,7 +40,7 @@ function App() {
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
       return {
         ...item,
-        category: (document.getElementsByName(getPaymentInformation(item).split(",")[0].replace("Nákup:", "").trim())[0] as unknown as HTMLSelectElement).value
+        category: (document.getElementsByName(getPaymentInformation(item))[0] as unknown as HTMLSelectElement).value
       };
     });
 

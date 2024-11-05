@@ -38,11 +38,11 @@ export function parseCSV(data: string): FioCSVData[] {
 
 export function getPaymentInformation(data: FioCSVData) {
     if (data["Zpráva pro příjemce"]) {
-        return data["Zpráva pro příjemce"];
+        return data["Zpráva pro příjemce"].split(",")[0].replace("Nákup:", "").trim();
     }
 
     if (data["Poznámka"]) {
-        return data["Poznámka"];
+        return data["Poznámka"].split(",")[0].replace("Nákup:", "").trim();
     }
 
     return "No payment information. Type: " + data["Typ"];
