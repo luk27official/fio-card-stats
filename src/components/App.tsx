@@ -95,12 +95,15 @@ function App() {
         <a href="/assets/data/example.csv">Download example CSV</a>
       </div>
       {showHelp && <div className="help">
-        The usage is simple. Just upload your Fio Card data in CSV format. Then you can categorize your payments by selecting the category from the dropdown menu.
-        The categories are saved in the local storage so you don't have to categorize them again. Data is neither stored nor sent to any server.
-        <br />
-        Použití nástroje je jednoduché. Stačí nahrát data z Fio banky ve formátu CSV. Poté můžete kategorizovat platby výběrem kategorie z rozbalovacího menu.
-        Kategorie jsou ukládány v lokálním úložišti, takže je nemusíte znovu kategorizovat. Data nejsou ukládána ani odesílána na žádný server.
-        <a href="#" onClick={() => handleHelpClick()} style={{ fontSize: "1rem" }}>Back to upload</a>
+        <p>
+          The usage is simple. Just upload your Fio Card data in CSV format. Then you can categorize your payments by selecting the category from the dropdown menu.
+          The categories are saved in the local storage so you don't have to categorize them again. Data is neither stored nor sent to any server.
+        </p>
+        <p>
+          Použití nástroje je jednoduché. Stačí nahrát data z Fio banky ve formátu CSV. Poté můžete kategorizovat platby výběrem kategorie z rozbalovacího menu.
+          Kategorie jsou ukládány v lokálním úložišti, takže je nemusíte znovu kategorizovat. Data nejsou ukládána ani odesílána na žádný server.
+        </p>
+        <a href="#" onClick={() => handleHelpClick()}>Back to upload</a>
       </div>}
       {!showHelp && <>
         <FileInput onChange={onChange} />

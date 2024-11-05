@@ -16,6 +16,7 @@
     width: fit-content;
     cursor: pointer;
     font-weight: bold;
+    color: black;
 }
 
 .submit-button:hover {
