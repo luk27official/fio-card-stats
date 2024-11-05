@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import "./Item.css";
-import { CategoryName, categoryColors, defaultCategoryMapping } from "../utils/customTypes";
+import { CategoryName, categoryColors, defaultCategoryMapping, prettifiedCategoryNames } from "../utils/customTypes";
 
 function Item({ itemName }: { itemName: string; }) {
 
@@ -34,7 +34,7 @@ function Item({ itemName }: { itemName: string; }) {
     }, [itemName]); // dependencies to ensure it runs only on mount
 
     // should correspond to CategoryName defined in utils/customTypes.ts
-    const categories: CategoryName[] = ["food", "travel", "ATM", "freetime", "income", "living", "other"] as const;
+    const categories: CategoryName[] = ["food", "travel", "ATM", "freetime", "income", "living", "other", "transfer"] as const;
 
     // save the category to the localStorage on change
     const saveCategory = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -53,7 +53,7 @@ function Item({ itemName }: { itemName: string; }) {
         <div className="item-card" style={{ backgroundColor: categoryColors[selectedCategory] || '#ffffff' }}>
             <select name={itemName} className="item-select" value={selectedCategory} onChange={(e) => saveCategory(e)}>
                 {categories.map((category, index) => (
-                    <option key={index} value={category}>{category}</option>
+                    <option key={index} value={category}>{prettifiedCategoryNames[category]}</option>
                 ))}
             </select>
             <span className="item-name">{itemName}</span>

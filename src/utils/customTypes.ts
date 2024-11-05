@@ -1,4 +1,4 @@
-export type CategoryName = "food" | "travel" | "ATM" | "freetime" | "income" | "living" | "other";
+export type CategoryName = "food" | "travel" | "ATM" | "freetime" | "income" | "living" | "other" | "transfer";
 
 export const categoryColors: Record<CategoryName, string> = {
     food: '#FFD8A8',       // Soft orange
@@ -7,7 +7,8 @@ export const categoryColors: Record<CategoryName, string> = {
     living: '#FFA8A8',     // Light red
     income: '#A8D8A8',     // Light green
     freetime: '#D8A8FF',   // Soft purple
-    other: '#E0E0E0'       // Light gray
+    other: '#E0E0E0',      // Light gray
+    transfer: '#A8A8A8',   // Darker gray
 };
 
 export const defaultCategoryMapping: Record<string, CategoryName> = {
@@ -37,6 +38,9 @@ export const defaultCategoryMapping: Record<string, CategoryName> = {
     "bankomat": "ATM",
 
     "ikea": "living",
+
+    "platba prevodem uvnitr banky": "transfer",
+    "transfer": "transfer",
 };
 
 export const prettifiedCategoryNames: Record<CategoryName, string> = {
@@ -46,5 +50,6 @@ export const prettifiedCategoryNames: Record<CategoryName, string> = {
     living: "Living",
     income: "Income",
     freetime: "Free Time",
-    other: "Other"
+    other: "Other",
+    transfer: "Transfers"
 };
