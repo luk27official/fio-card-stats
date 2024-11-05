@@ -1,5 +1,5 @@
 .details-btn {
-    display: inline-block;
+    display: block;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -60,4 +60,26 @@ tbody tr {
 td:nth-child(2) {
     text-align: right;
     font-weight: bold;
+}
+
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    flex-direction: column;
+    width: 25%;
+}
+
+.category-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.category-detailed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
