@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import "./Item.css";
-import { CategoryName, categoryColors, defaultMapping } from "../utils/customTypes";
+import { CategoryName, categoryColors, defaultCategoryMapping } from "../utils/customTypes";
 
 function Item({ itemName }: { itemName: string; }) {
 
@@ -25,9 +25,9 @@ function Item({ itemName }: { itemName: string; }) {
         }
 
         // Else look into the mapping if there is a match
-        Object.keys(defaultMapping).forEach((key) => {
+        Object.keys(defaultCategoryMapping).forEach((key) => {
             if (itemName.toLowerCase().includes(key)) {
-                setSelectedCategory(defaultMapping[key]);
+                setSelectedCategory(defaultCategoryMapping[key]);
             }
         });
 

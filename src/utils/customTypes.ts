@@ -10,7 +10,7 @@ export const categoryColors: Record<CategoryName, string> = {
     other: '#E0E0E0'       // Light gray
 };
 
-export const defaultMapping: Record<string, CategoryName> = {
+export const defaultCategoryMapping: Record<string, CategoryName> = {
     "bolt.eu/o": "travel",
     "operator ict": "travel",
     "www.cd.cz": "travel",
@@ -37,4 +37,14 @@ export const defaultMapping: Record<string, CategoryName> = {
     "bankomat": "ATM",
 
     "ikea": "living",
+};
+
+export const prettifiedCategoryNames: Record<CategoryName, string> = {
+    food: "Food",
+    travel: "Travel",
+    ATM: "ATM",
+    living: "Living",
+    income: "Income",
+    freetime: "Free Time",
+    other: "Other"
 };

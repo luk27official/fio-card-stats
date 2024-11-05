@@ -4,7 +4,7 @@ import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInforma
 import Item from "./Item";
 import FileInput from "./FileInput";
 import { CategoryBaseInfo, CategoryDetails } from "./CategoryDetails";
-import { CategoryName } from "../utils/customTypes";
+import { CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
 import { convertToCZK } from "../utils/otherUtils";
 
 
@@ -122,7 +122,7 @@ function App() {
             <>
               <hr className="styled-hr" />
               <div>
-                <span className="category-name category-detailed">{shownDetailedCategory}</span>
+                <span className="category-name category-detailed">{prettifiedCategoryNames[shownDetailedCategory]}</span>
                 <CategoryDetails category={shownDetailedCategory} categorizedData={categorizedData} />
               </div>
             </>}

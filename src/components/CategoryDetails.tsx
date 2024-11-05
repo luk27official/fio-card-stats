@@ -1,6 +1,6 @@
 import { CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import "./CategoryDetails.css";
-import { categoryColors, CategoryName } from "../utils/customTypes";
+import { categoryColors, CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
 import { useMemo } from "react";
 import { convertToCZK } from "../utils/otherUtils";
 
@@ -26,7 +26,7 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
 
     return (
         <div className="category-item">
-            <span className="category-name">{category}</span>
+            <span className="category-name">{prettifiedCategoryNames[category]}</span>
             <button onClick={() => setShownDetailedCategory(category)} className="details-btn">Show details</button>
             <div>
                 <br />
