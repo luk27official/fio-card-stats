@@ -41,6 +41,7 @@ export const defaultCategoryMapping: Record<string, CategoryName> = {
 
     "platba prevodem uvnitr banky": "transfer",
     "transfer": "transfer",
+    "revolut": "transfer"
 };
 
 export const prettifiedCategoryNames: Record<CategoryName, string> = {
