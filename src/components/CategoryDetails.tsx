@@ -1,12 +1,28 @@
 import { CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import "./CategoryDetails.css";
 import { categoryColors, CategoryName } from "../utils/customTypes";
+import { useMemo } from "react";
+import { convertToCZK } from "../utils/otherUtils";
 
 export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCategory }: {
     category: CategoryName;
     categorizedData: Record<string, CategorizedFioCSVData[]>;
     setShownDetailedCategory: (category: CategoryName) => void;
 }) {
+
+    const categorySum = useMemo(() => {
+        let sum = 0;
+
+        categorizedData[category].forEach((item) => {
+            if (!item["Objem"] || !item["Měna"]) {
+                return;
+            }
+
+            sum += convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
+        });
+
+        return sum;
+    }, [categorizedData, category]);
 
     return (
         <div className="category-item">
@@ -16,15 +32,9 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
                 <br />
                 <strong>Total: </strong>
                 <span style={{
-                    color: categorizedData[category].reduce((sum, item) => {
-                        const amount = parseFloat(item["Objem"].replace(",", ".").replace(" ", ""));
-                        return sum + amount;
-                    }, 0) >= 0 ? "green" : "red"
+                    color: categorySum >= 0 ? "green" : "red"
                 }}>
-                    {categorizedData[category].reduce((sum, item) => {
-                        const amount = parseFloat(item["Objem"].replace(",", ".").replace(" ", ""));
-                        return sum + amount;
-                    }, 0).toFixed(2)} CZK
+                    {categorySum.toFixed(2)} CZK
                 </span>
                 <br />
                 <strong>Number of transactions: </strong>
@@ -49,9 +59,8 @@ export function CategoryDetails({ category, categorizedData }: { category: Categ
                     {categorizedData[category].map((item, index) => (
                         <tr key={index}>
                             <td>{getPaymentInformation(item)}</td>
-                            {/* // TODO: add other currencies */}
                             <td style={{ color: parseFloat(item["Objem"]) >= 0 ? "green" : "red" }}>
-                                {item["Objem"]} CZK
+                                {item["Objem"]} {item["Měna"]}
                             </td>
                             <td>{item["Datum"]}</td>
                         </tr>

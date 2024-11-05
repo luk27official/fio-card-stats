@@ -5,6 +5,7 @@ import Item from "./Item";
 import FileInput from "./FileInput";
 import { CategoryBaseInfo, CategoryDetails } from "./CategoryDetails";
 import { CategoryName } from "../utils/customTypes";
+import { convertToCZK } from "../utils/otherUtils";
 
 
 function App() {
@@ -69,7 +70,17 @@ function App() {
   };
 
   const totalSum = useMemo(() => {
-    return parsedData.reduce((acc, item) => acc + parseFloat(item["Objem"] === undefined ? "0" : item["Objem"].replace(',', '.')), 0).toFixed(2);
+    let sum = 0;
+
+    for (const record of parsedData) {
+      if (!record["Objem"] || !record["Měna"]) {
+        continue;
+      }
+
+      sum += convertToCZK(record["Objem"].replace(",", "."), record["Měna"]);
+    }
+
+    return sum.toFixed(2);
   }, [parsedData]);
 
   return (
@@ -105,7 +116,6 @@ function App() {
           </div>
           <hr className="styled-hr" style={{ width: "25%" }} />
           <div className="category-final-stats">
-            {/* TODO: handle different currencies */}
             <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{totalSum} CZK</span></strong>
           </div>
           {shownDetailedCategory &&
