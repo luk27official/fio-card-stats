@@ -9,3 +9,32 @@ export const categoryColors: Record<CategoryName, string> = {
     freetime: '#D8A8FF',   // Soft purple
     other: '#E0E0E0'       // Light gray
 };
+
+export const defaultMapping: Record<string, CategoryName> = {
+    "bolt.eu/o": "travel",
+    "operator ict": "travel",
+    "www.cd.cz": "travel",
+    "studentagency": "travel",
+    "leoexpress": "travel",
+    "uber": "travel",
+
+    "lidl": "food",
+    "tesco": "food",
+    "albert": "food",
+    "kaufland": "food",
+    "zabka": "food",
+    "kebab": "food",
+    "donalds": "food",  // McDonalds
+    "burger": "food",
+    "penny": "food",
+    "kfc": "food",
+    "subway": "food",
+    "pizz": "food",     // pizza, pizzeria...
+    "bageterie": "food",
+    "potraviny": "food",
+    "restaur": "food",  // restaurant
+
+    "bankomat": "ATM",
+
+    "ikea": "living",
+};

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import "./Item.css";
-import { CategoryName, categoryColors } from "../utils/customTypes";
+import { CategoryName, categoryColors, defaultMapping } from "../utils/customTypes";
 
 function Item({ itemName }: { itemName: string; }) {
 
@@ -23,6 +23,14 @@ function Item({ itemName }: { itemName: string; }) {
         if (item) {
             setSelectedCategory(item.category as CategoryName);
         }
+
+        // Else look into the mapping if there is a match
+        Object.keys(defaultMapping).forEach((key) => {
+            if (itemName.toLowerCase().includes(key)) {
+                setSelectedCategory(defaultMapping[key]);
+            }
+        });
+
     }, [itemName]); // dependencies to ensure it runs only on mount
 
     // should correspond to CategoryName defined in utils/customTypes.ts
