@@ -28,3 +28,9 @@
     color: #333;
     font-size: 1.1em;
 }
+
+.item-amount {
+    margin-top: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+}

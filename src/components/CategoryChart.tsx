@@ -4,8 +4,9 @@ import { FioCSVData } from "../utils/csvUtils";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { categoryColors, CategoryName } from "../utils/customTypes";
+import { convertToCZK, convertCurrency, Currency } from "../utils/otherUtils";
 
-function CategoryChart({ categorizedData }: { categorizedData: Record<CategoryName, FioCSVData[]>; }) {
+function CategoryChart({ categorizedData, currency = "CZK" }: { categorizedData: Record<CategoryName, FioCSVData[]>; currency?: Currency; }) {
     const ref = useRef<HTMLDivElement | null>(null);
     const [width, setWidth] = useState(0);
 
@@ -13,7 +14,6 @@ function CategoryChart({ categorizedData }: { categorizedData: Record<CategoryNa
         const categoryDataMap: Record<string, Record<string, number>> = {};
         const datesSet = new Set<string>();
 
-        // Collect and normalize dates and amounts for each category
         Object.entries(categorizedData).forEach(([category, dataArray]) => {
             if (!categoryDataMap[category]) {
                 categoryDataMap[category] = {};
@@ -25,7 +25,9 @@ function CategoryChart({ categorizedData }: { categorizedData: Record<CategoryNa
 
                 datesSet.add(standardizedDate);
 
-                const amount = parseFloat(data["Objem"].replace(",", "."));
+                const amountInCZK = convertToCZK(data["Objem"].replace(",", "."), data["Měna"]);
+                const amount = convertCurrency(amountInCZK, currency);
+
                 if (!isNaN(amount)) {
                     categoryDataMap[category][standardizedDate] = (categoryDataMap[category][standardizedDate] || 0) + amount;
                 }
@@ -34,33 +36,28 @@ function CategoryChart({ categorizedData }: { categorizedData: Record<CategoryNa
 
         const sortedDates = Array.from(datesSet).sort((a, b) => Date.parse(a) - Date.parse(b));
 
-        // Ensure cumulative sums across sorted dates
         const finalData = sortedDates.map((date) => {
             const entry: Record<string, number | string> = { date };
             let totalSum = 0;
 
             Object.keys(categoryDataMap).forEach((category) => {
-                // Carry forward the last cumulative amount if the date is missing
                 const previousDate = sortedDates[sortedDates.indexOf(date) - 1];
                 if (categoryDataMap[category][date] === undefined) {
                     categoryDataMap[category][date] = previousDate ? categoryDataMap[category][previousDate] : 0;
                 } else if (previousDate) {
-                    // Add to cumulative sum from previous date if date is found
                     categoryDataMap[category][date] += categoryDataMap[category][previousDate];
                 }
 
-                // Round to 1 decimal place without converting to string
                 entry[category] = Math.round(categoryDataMap[category][date] * 10) / 10;
                 totalSum += categoryDataMap[category][date];
             });
 
-            // Track total across categories for this date, rounded to 1 decimal
             entry["Total"] = Math.round(totalSum * 10) / 10;
             return entry;
         });
 
         return finalData;
-    }, [categorizedData]);
+    }, [categorizedData, currency]);
 
     useEffect(() => {
         if (ref.current) {

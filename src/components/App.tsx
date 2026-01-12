@@ -5,7 +5,7 @@ import Item from "./Item";
 import FileInput from "./FileInput";
 import { CategoryBaseInfo, CategoryDetails } from "./CategoryDetails";
 import { CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
-import { convertToCZK } from "../utils/otherUtils";
+import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency, formatCurrency } from "../utils/otherUtils";
 import CategoryChart from "./CategoryChart";
 
 
@@ -15,6 +15,8 @@ function App() {
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [shownDetailedCategory, setShownDetailedCategory] = useState<CategoryName | null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>("CZK");
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -25,42 +27,24 @@ function App() {
     }
   };
 
-  const uniqueItems = parsedData.reduce((acc: string[], item: FioCSVData) => {
-    if (!item) {
-      return acc;
-    }
-
-    const it = getPaymentInformation(item);
-
-    if (!acc.includes(it)) {
-      acc.push(it);
-    }
-
-    return acc;
-  }, []);
+  const uniqueItems = getUniqueItems(parsedData, getPaymentInformation, hideDuplicates);
+  const itemAmounts = useMemo(() => calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency), [parsedData, selectedCurrency]);
 
   const handleClick = () => {
+    const nameMapping = createTransactionNameMapping(parsedData, getPaymentInformation);
+
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
+      const itemName = getPaymentInformation(item);
+      const representativeName = nameMapping.get(itemName) || itemName;
+      const selectElement = document.getElementsByName(representativeName)[0] as unknown as HTMLSelectElement;
+
       return {
         ...item,
-        category: (document.getElementsByName(getPaymentInformation(item))[0] as unknown as HTMLSelectElement).value as CategoryName
+        category: selectElement.value as CategoryName
       };
     });
 
-    // group data by category
-    const groupedData = data.reduce((acc: Record<string, CategorizedFioCSVData[]>, item) => {
-      if (!acc[item.category]) {
-        acc[item.category] = [];
-      }
-
-      if (!item["Datum"]) {
-        return acc;
-      }
-
-      acc[item.category].push(item);
-
-      return acc;
-    }, {});
+    const groupedData = groupDataByCategory(data);
 
     setSubmitted(true);
     setCategorizedData(groupedData);
@@ -70,19 +54,7 @@ function App() {
     setShowHelp(!showHelp);
   };
 
-  const totalSum = useMemo(() => {
-    let sum = 0;
-
-    for (const record of parsedData) {
-      if (!record["Objem"] || !record["Měna"]) {
-        continue;
-      }
-
-      sum += convertToCZK(record["Objem"].replace(",", "."), record["Měna"]);
-    }
-
-    return sum.toFixed(1);
-  }, [parsedData]);
+  const totalSum = useMemo(() => calculateTotalSum(parsedData, selectedCurrency), [parsedData, selectedCurrency]);
 
   return (
     <div id="main">
@@ -107,28 +79,54 @@ function App() {
       </div>}
       {!showHelp && <>
         <FileInput onChange={onChange} />
+        {parsedData.length > 0 && (
+          <div className="duplicate-toggle">
+            <label>
+              <input
+                type="checkbox"
+                checked={hideDuplicates}
+                onChange={(e) => setHideDuplicates(e.target.checked)}
+              />
+              {" Hide duplicate transactions"}
+            </label>
+          </div>
+        )}
+        {parsedData.length > 0 && (
+          <div className="currency-selector">
+            <label>
+              Currency:
+              <select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value as Currency)}>
+                <option value="CZK">CZK (Kč)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="USD">USD ($)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="PLN">PLN (zł)</option>
+              </select>
+            </label>
+          </div>
+        )}
         <div className="items-list">
-          {uniqueItems.map((item) => <Item itemName={item} key={item} />)}
+          {uniqueItems.map((item) => <Item itemName={item} amount={itemAmounts.get(item)} currency={selectedCurrency} key={item} />)}
         </div>
         {parsedData.length > 0 && <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />}
         {submitted && <>
           <hr className="styled-hr" />
           <div className="category-list">
             {Object.keys(categorizedData).sort().map((category, index) => (
-              <CategoryBaseInfo category={category as CategoryName} categorizedData={categorizedData} key={index} setShownDetailedCategory={setShownDetailedCategory} />
+              <CategoryBaseInfo category={category as CategoryName} categorizedData={categorizedData} currency={selectedCurrency} key={index} setShownDetailedCategory={setShownDetailedCategory} />
             ))}
           </div>
           <hr className="styled-hr" style={{ width: "25%" }} />
-          <CategoryChart categorizedData={categorizedData} />
+          <CategoryChart categorizedData={categorizedData} currency={selectedCurrency} />
           <div className="category-final-stats">
-            <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{totalSum} CZK</span></strong>
+            <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{formatCurrency(parseFloat(totalSum), selectedCurrency)}</span></strong>
           </div>
           {shownDetailedCategory &&
             <>
               <hr className="styled-hr" />
               <div>
                 <span className="category-name category-detailed">{prettifiedCategoryNames[shownDetailedCategory]}</span>
-                <CategoryDetails category={shownDetailedCategory} categorizedData={categorizedData} />
+                <CategoryDetails category={shownDetailedCategory} categorizedData={categorizedData} currency={selectedCurrency} />
               </div>
             </>}
         </>}

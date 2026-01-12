@@ -1,8 +1,9 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import "./Item.css";
 import { CategoryName, categoryColors, defaultCategoryMapping, prettifiedCategoryNames } from "../utils/customTypes";
+import { Currency, formatCurrency } from "../utils/otherUtils";
 
-function Item({ itemName }: { itemName: string; }) {
+function Item({ itemName, amount, currency = "CZK" }: { itemName: string; amount?: number; currency?: Currency; }) {
 
     const [selectedCategory, setSelectedCategory] = useState<CategoryName>("other");
 
@@ -57,6 +58,11 @@ function Item({ itemName }: { itemName: string; }) {
                 ))}
             </select>
             <span className="item-name">{itemName}</span>
+            {amount !== undefined && (
+                <div className="item-amount" style={{ color: amount >= 0 ? 'green' : 'red' }}>
+                    {formatCurrency(amount, currency)}
+                </div>
+            )}
         </div>
     );
 }
