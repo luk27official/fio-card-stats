@@ -17,6 +17,7 @@ export const defaultCategoryMapping: Record<string, CategoryName> = {
     "www.cd.cz": "travel",
     "studentagency": "travel",
     "leoexpress": "travel",
+    "gopay  *leoexpress": "travel",
     "uber": "travel",
 
     "lidl": "food",
@@ -27,21 +28,52 @@ export const defaultCategoryMapping: Record<string, CategoryName> = {
     "kebab": "food",
     "donalds": "food",  // McDonalds
     "burger": "food",
-    "penny": "food",
     "kfc": "food",
     "subway": "food",
     "pizz": "food",     // pizza, pizzeria...
     "bageterie": "food",
     "potraviny": "food",
     "restaur": "food",  // restaurant
+    "penny": "food",
+    "billa": "food",
+    "geco": "food",
+    "dm drogerie": "food",
+    "rangoli": "food",
+    "wok": "food",
+    "cafe": "food",
+    "kavarna": "food",
+    "kozlovna": "food",
+    "foodora": "food",
+    "sodexo": "food",
+    "relay": "food",
 
     "bankomat": "ATM",
+    "vyber z bankomatu": "ATM",
 
     "ikea": "living",
+    "jysk": "living",
+    "sportisimo": "living",
+    "action": "living",
+    "najem": "living",
+    "rent": "living",
+    "byt": "living",
+    "alza": "living",
+    "o2": "living",
+    "vodafone": "living",
+    "mobile": "living",
 
     "platba prevodem uvnitr banky": "transfer",
     "transfer": "transfer",
-    "revolut": "transfer"
+    "revolut": "transfer",
+    "okamžitá odchozí platba": "transfer",
+
+    "bezhotovostní příjem": "income",
+    "okamžitá příchozí platba": "income",
+    "mzda": "income",
+    "výplata": "income",
+    "plat": "income",
+    "salary": "income",
+    "bonus": "income",
 };
 
 export const prettifiedCategoryNames: Record<CategoryName, string> = {
