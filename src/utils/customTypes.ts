@@ -1,14 +1,14 @@
 export type CategoryName = "food" | "travel" | "ATM" | "freetime" | "income" | "living" | "other" | "transfer";
 
 export const categoryColors: Record<CategoryName, string> = {
-    food: '#FFD8A8',       // Soft orange
-    travel: '#B3D1FF',     // Light blue
-    ATM: '#FFA8A8',        // Light red
-    living: '#FFA8A8',     // Light red
-    income: '#A8D8A8',     // Light green
-    freetime: '#D8A8FF',   // Soft purple
-    other: '#E0E0E0',      // Light gray
-    transfer: '#A8A8A8',   // Darker gray
+    food: '#FF9933',       // Vibrant orange
+    travel: '#3399FF',     // Vibrant blue
+    ATM: '#FF3333',        // Vibrant red
+    living: '#FF6666',     // Vibrant light red
+    income: '#33CC33',     // Vibrant green
+    freetime: '#9933FF',   // Vibrant purple
+    other: '#999999',      // Medium gray
+    transfer: '#666666',   // Dark gray
 };
 
 export const defaultCategoryMapping: Record<string, CategoryName> = {

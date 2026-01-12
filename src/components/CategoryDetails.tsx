@@ -20,10 +20,24 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
         categorySum += convertCurrency(amountInCZK, currency);
     });
 
+    const backgroundColor = categoryColors[category];
+    const tintedBackground = `linear-gradient(135deg, white 0%, ${backgroundColor}15 100%)`;
+
+    const handleShowDetails = () => {
+        setShownDetailedCategory(category);
+        // Scroll to details section after state update
+        setTimeout(() => {
+            const detailsSection = document.querySelector('.category-details-section');
+            if (detailsSection) {
+                detailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    };
+
     return (
-        <div className="category-item">
+        <div className="category-item" style={{ background: tintedBackground, borderLeft: `4px solid ${backgroundColor}` }}>
             <span className="category-name">{prettifiedCategoryNames[category]}</span>
-            <button onClick={() => setShownDetailedCategory(category)} className="details-btn">Show details</button>
+            <button onClick={handleShowDetails} className="details-btn">Show details</button>
             <div>
                 <br />
                 <strong>Total: </strong>

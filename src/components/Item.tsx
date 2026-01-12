@@ -51,7 +51,7 @@ function Item({ itemName, amount, currency = "CZK" }: { itemName: string; amount
     };
 
     return (
-        <div className="item-card" style={{ backgroundColor: categoryColors[selectedCategory] || '#ffffff' }}>
+        <div className="item-card" style={{ backgroundColor: categoryColors[selectedCategory] ? categoryColors[selectedCategory] + '30' : '#ffffff' }}>
             <select name={itemName} className="item-select" value={selectedCategory} onChange={(e) => saveCategory(e)}>
                 {categories.map((category, index) => (
                     <option key={index} value={category}>{prettifiedCategoryNames[category]}</option>

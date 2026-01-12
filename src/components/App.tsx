@@ -3,10 +3,12 @@ import { ChangeEvent, useState } from 'react';
 import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
-import { CategoryBaseInfo, CategoryDetails } from "./CategoryDetails";
-import { CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
-import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency, formatCurrency } from "../utils/otherUtils";
-import CategoryChart from "./CategoryChart";
+import Header from "./Header";
+import HelpSection from "./HelpSection";
+import ControlPanel from "./ControlPanel";
+import ResultsSection from "./ResultsSection";
+import { CategoryName } from "../utils/customTypes";
+import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency } from "../utils/otherUtils";
 
 
 function App() {
@@ -28,7 +30,7 @@ function App() {
   };
 
   const uniqueItems = getUniqueItems(parsedData, getPaymentInformation, hideDuplicates);
-  const itemAmounts = calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency);
+  const itemAmounts = calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency, hideDuplicates);
 
   const handleClick = () => {
     const nameMapping = createTransactionNameMapping(parsedData, getPaymentInformation);
@@ -58,79 +60,54 @@ function App() {
 
   return (
     <div id="main">
-      <span className="fancy-header">Fio Card data</span>
-      <div>
-        <a href="#" onClick={() => handleHelpClick()}>Help</a>
-        <span> | </span>
-        <a href="https://github.com/luk27official/fio-card-stats" target="_blank">GitHub</a>
-        <span> | </span>
-        <a href="/assets/data/example.csv">Download example CSV</a>
-      </div>
-      {showHelp && <div className="help">
-        <p>
-          The usage is simple. Just upload your Fio Card data in CSV format. Then you can categorize your payments by selecting the category from the dropdown menu.
-          The categories are saved in the local storage so you don't have to categorize them again. Data is neither stored nor sent to any server.
-        </p>
-        <p>
-          Použití nástroje je jednoduché. Stačí nahrát data z Fio banky ve formátu CSV. Poté můžete kategorizovat platby výběrem kategorie z rozbalovacího menu.
-          Kategorie jsou ukládány v lokálním úložišti, takže je nemusíte znovu kategorizovat. Data nejsou ukládána ani odesílána na žádný server.
-        </p>
-        <a href="#" onClick={() => handleHelpClick()}>Back to upload</a>
-      </div>}
-      {!showHelp && <>
-        <FileInput onChange={onChange} />
-        {parsedData.length > 0 && (
-          <div className="duplicate-toggle">
-            <label>
-              <input
-                type="checkbox"
-                checked={hideDuplicates}
-                onChange={(e) => setHideDuplicates(e.target.checked)}
+      <Header onHelpClick={handleHelpClick} />
+
+      {showHelp && <HelpSection onClose={handleHelpClick} />}
+
+      {!showHelp && (
+        <>
+          <FileInput onChange={onChange} />
+
+          {parsedData.length > 0 && (
+            <ControlPanel
+              hideDuplicates={hideDuplicates}
+              setHideDuplicates={setHideDuplicates}
+              selectedCurrency={selectedCurrency}
+              setSelectedCurrency={setSelectedCurrency}
+            />
+          )}
+
+          <div className="items-list">
+            {uniqueItems.map((item) => (
+              <Item
+                itemName={item}
+                amount={itemAmounts.get(item)}
+                currency={selectedCurrency}
+                key={item}
               />
-              {" Hide duplicate transactions"}
-            </label>
-          </div>
-        )}
-        {parsedData.length > 0 && (
-          <div className="currency-selector">
-            <label>
-              Currency:
-              <select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value as Currency)}>
-                <option value="CZK">CZK (Kč)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="USD">USD ($)</option>
-                <option value="GBP">GBP (£)</option>
-                <option value="PLN">PLN (zł)</option>
-              </select>
-            </label>
-          </div>
-        )}
-        <div className="items-list">
-          {uniqueItems.map((item) => <Item itemName={item} amount={itemAmounts.get(item)} currency={selectedCurrency} key={item} />)}
-        </div>
-        {parsedData.length > 0 && <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />}
-        {submitted && <>
-          <hr className="styled-hr" />
-          <div className="category-list">
-            {Object.keys(categorizedData).sort().map((category, index) => (
-              <CategoryBaseInfo category={category as CategoryName} categorizedData={categorizedData} currency={selectedCurrency} key={index} setShownDetailedCategory={setShownDetailedCategory} />
             ))}
           </div>
-          <hr className="styled-hr" style={{ width: "25%" }} />
-          <CategoryChart categorizedData={categorizedData} currency={selectedCurrency} />
-          <div className="category-final-stats">
-            <strong>Total net: <span style={{ color: parseFloat(totalSum) >= 0 ? "green" : "red" }}>{formatCurrency(parseFloat(totalSum), selectedCurrency)}</span></strong>
-          </div>
-          {shownDetailedCategory &&
-            <>
-              <hr className="styled-hr" />
-              <div>
-                <span className="category-name category-detailed">{prettifiedCategoryNames[shownDetailedCategory]}</span>
-                <CategoryDetails category={shownDetailedCategory} categorizedData={categorizedData} currency={selectedCurrency} />
-              </div>
-            </>}
-        </>}
-      </>}
+
+          {parsedData.length > 0 && (
+            <input
+              type="submit"
+              value="Submit"
+              onClick={handleClick}
+              className="submit-button"
+            />
+          )}
+
+          {submitted && (
+            <ResultsSection
+              categorizedData={categorizedData}
+              currency={selectedCurrency}
+              totalSum={totalSum}
+              shownDetailedCategory={shownDetailedCategory}
+              setShownDetailedCategory={setShownDetailedCategory}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

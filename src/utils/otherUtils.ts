@@ -81,16 +81,17 @@ export const createTransactionNameMapping = <T>(
 export const calculateItemAmounts = <T extends { Objem?: string; Měna?: string; }>(
     data: T[],
     getItemName: (item: T) => string,
-    targetCurrency: Currency = "CZK"
+    targetCurrency: Currency = "CZK",
+    useMappedNames: boolean = true
 ): Map<string, number> => {
     const amounts = new Map<string, number>();
-    const nameMapping = createTransactionNameMapping(data, getItemName);
+    const nameMapping = useMappedNames ? createTransactionNameMapping(data, getItemName) : null;
 
     for (const item of data) {
         if (!item || !item.Objem || !item.Měna) continue;
 
         const itemName = getItemName(item);
-        const representativeName = nameMapping.get(itemName) || itemName;
+        const representativeName = nameMapping ? (nameMapping.get(itemName) || itemName) : itemName;
         const amountInCZK = convertToCZK(item.Objem.replace(",", "."), item.Měna);
         const amount = convertCurrency(amountInCZK, targetCurrency);
 
