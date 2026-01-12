@@ -1,5 +1,5 @@
 import './App.css';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
@@ -28,7 +28,7 @@ function App() {
   };
 
   const uniqueItems = getUniqueItems(parsedData, getPaymentInformation, hideDuplicates);
-  const itemAmounts = useMemo(() => calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency), [parsedData, selectedCurrency]);
+  const itemAmounts = calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency);
 
   const handleClick = () => {
     const nameMapping = createTransactionNameMapping(parsedData, getPaymentInformation);
@@ -54,7 +54,7 @@ function App() {
     setShowHelp(!showHelp);
   };
 
-  const totalSum = useMemo(() => calculateTotalSum(parsedData, selectedCurrency), [parsedData, selectedCurrency]);
+  const totalSum = calculateTotalSum(parsedData, selectedCurrency);
 
   return (
     <div id="main">

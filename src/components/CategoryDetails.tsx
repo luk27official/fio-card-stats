@@ -1,7 +1,6 @@
 import { CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import "./CategoryDetails.css";
 import { categoryColors, CategoryName, prettifiedCategoryNames } from "../utils/customTypes";
-import { useMemo } from "react";
 import { convertToCZK, convertCurrency, Currency, formatCurrency } from "../utils/otherUtils";
 
 export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCategory, currency = "CZK" }: {
@@ -10,21 +9,16 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
     setShownDetailedCategory: (category: CategoryName) => void;
     currency?: Currency;
 }) {
+    let categorySum = 0;
 
-    const categorySum = useMemo(() => {
-        let sum = 0;
+    categorizedData[category].forEach((item) => {
+        if (!item["Objem"] || !item["Měna"]) {
+            return;
+        }
 
-        categorizedData[category].forEach((item) => {
-            if (!item["Objem"] || !item["Měna"]) {
-                return;
-            }
-
-            const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
-            sum += convertCurrency(amountInCZK, currency);
-        });
-
-        return sum;
-    }, [categorizedData, category, currency]);
+        const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
+        categorySum += convertCurrency(amountInCZK, currency);
+    });
 
     return (
         <div className="category-item">
