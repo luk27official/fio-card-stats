@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 
 function FileInput({ onChange: onChange }: { onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void; }) {
     return (
-        <div className="file-upload-card">
+        <>
             <input
                 type="file"
                 id="file-upload"
@@ -14,7 +14,7 @@ function FileInput({ onChange: onChange }: { onChange: (e: ChangeEvent<HTMLInput
             <label htmlFor="file-upload" className="file-upload-button">
                 Upload CSV
             </label>
-        </div>
+        </>
     );
 }
 

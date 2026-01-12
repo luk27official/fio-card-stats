@@ -58,10 +58,21 @@ function CategoryChart({ categorizedData, currency = "CZK" }: { categorizedData:
     const processedData = finalData;
 
     useEffect(() => {
-        if (ref.current) {
-            setWidth(ref.current.clientWidth);
-        }
-    }, [ref]);
+        const updateWidth = () => {
+            if (ref.current) {
+                const containerWidth = ref.current.clientWidth;
+                const isMobile = window.innerWidth <= 768;
+                setWidth(isMobile ? Math.max(containerWidth, 600) : containerWidth);
+            }
+        };
+
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+
+        return () => {
+            window.removeEventListener('resize', updateWidth);
+        };
+    }, []);
 
     return (
         <div className="category-chart" ref={ref}>
