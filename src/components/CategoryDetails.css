@@ -100,3 +100,38 @@ td:nth-child(2) {
     align-items: center;
     margin-bottom: 24px;
 }
+
+.category-details-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+    th,
+    td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    td:nth-child(1) {
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        white-space: nowrap;
+    }
+
+    .category-name {
+        font-size: 1.5em;
+    }
+}

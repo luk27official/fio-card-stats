@@ -82,8 +82,10 @@
 
 @media (max-width: 768px) {
     .chart-section {
-        padding: 16px 8px;
+        padding: 16px 4px;
         border-radius: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -180,5 +182,9 @@
 
     .chart-section {
         padding: 20px 16px;
+    }
+
+    .category-details-section {
+        padding: 16px;
     }
 }

@@ -56,32 +56,34 @@ export function CategoryBaseInfo({ category, categorizedData, setShownDetailedCa
 
 export function CategoryDetails({ category, categorizedData, currency = "CZK" }: { category: CategoryName; categorizedData: Record<string, CategorizedFioCSVData[]>; currency?: Currency; }) {
     return (
-        <div>
-            <table>
-                <thead style={{ backgroundColor: categoryColors[category] }}>
-                    <tr>
-                        <th>Payment Information</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categorizedData[category].map((item, index) => {
-                        const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
-                        const convertedAmount = convertCurrency(amountInCZK, currency);
+        <div className="category-details-wrapper">
+            <div className="table-container">
+                <table>
+                    <thead style={{ backgroundColor: categoryColors[category] }}>
+                        <tr>
+                            <th>Payment Information</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {categorizedData[category].map((item, index) => {
+                            const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
+                            const convertedAmount = convertCurrency(amountInCZK, currency);
 
-                        return (
-                            <tr key={index}>
-                                <td>{getPaymentInformation(item)}</td>
-                                <td style={{ color: convertedAmount >= 0 ? "green" : "red" }}>
-                                    {formatCurrency(convertedAmount, currency)}
-                                </td>
-                                <td>{item["Datum"]}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                            return (
+                                <tr key={index}>
+                                    <td>{getPaymentInformation(item)}</td>
+                                    <td style={{ color: convertedAmount >= 0 ? "green" : "red" }}>
+                                        {formatCurrency(convertedAmount, currency)}
+                                    </td>
+                                    <td>{item["Datum"]}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
