@@ -57,11 +57,21 @@ function App() {
     setShowHelp(!showHelp);
   };
 
+  const handleExampleClick = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}assets/data/example.csv`);
+      const data = await response.text();
+      setParsedData(parseCSV(data));
+    } catch (error) {
+      console.error('Failed to load example CSV:', error);
+    }
+  };
+
   const totalSum = calculateTotalSum(parsedData, selectedCurrency);
 
   return (
     <div id="main">
-      <Header onHelpClick={handleHelpClick} />
+      <Header onHelpClick={handleHelpClick} onExampleClick={handleExampleClick} />
 
       {showHelp && <HelpSection onClose={handleHelpClick} />}
 

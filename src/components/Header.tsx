@@ -2,9 +2,10 @@ import './Header.css';
 
 interface HeaderProps {
     onHelpClick: () => void;
+    onExampleClick: () => void;
 }
 
-function Header({ onHelpClick }: HeaderProps) {
+function Header({ onHelpClick, onExampleClick }: HeaderProps) {
     return (
         <header className="app-header">
             <h1 className="fancy-header">Fio Card Stats</h1>
@@ -17,9 +18,9 @@ function Header({ onHelpClick }: HeaderProps) {
                     GitHub
                 </a>
                 <span className="nav-separator">|</span>
-                <a href="/assets/data/example.csv" className="nav-link" download>
+                <button onClick={onExampleClick} className="nav-link">
                     Example CSV
-                </a>
+                </button>
             </nav>
         </header>
     );
