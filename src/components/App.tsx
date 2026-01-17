@@ -8,7 +8,7 @@ import HelpSection from "./HelpSection";
 import ControlPanel from "./ControlPanel";
 import ResultsSection from "./ResultsSection";
 import { CategoryName } from "../utils/customTypes";
-import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency } from "../utils/otherUtils";
+import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency, createItemToTransactionsMap } from "../utils/otherUtils";
 
 
 function App() {
@@ -31,6 +31,7 @@ function App() {
 
   const uniqueItems = getUniqueItems(parsedData, getPaymentInformation, hideDuplicates);
   const itemAmounts = calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency, hideDuplicates);
+  const itemTransactions = createItemToTransactionsMap(parsedData, getPaymentInformation, hideDuplicates);
 
   const handleClick = () => {
     const nameMapping = createTransactionNameMapping(parsedData, getPaymentInformation);
@@ -83,6 +84,7 @@ function App() {
                 itemName={item}
                 amount={itemAmounts.get(item)}
                 currency={selectedCurrency}
+                transactions={itemTransactions.get(item) || []}
                 key={item}
               />
             ))}

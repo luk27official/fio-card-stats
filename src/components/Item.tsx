@@ -2,10 +2,14 @@ import { ChangeEvent, useState, useEffect } from "react";
 import "./Item.css";
 import { CategoryName, categoryColors, defaultCategoryMapping, prettifiedCategoryNames } from "../utils/customTypes";
 import { Currency, formatCurrency } from "../utils/otherUtils";
+import { FioCSVData } from "../utils/csvUtils";
+import { TransactionModal } from "./TransactionModal";
 
-function Item({ itemName, amount, currency = "CZK" }: { itemName: string; amount?: number; currency?: Currency; }) {
+function Item({ itemName, amount, currency = "CZK", transactions = [] }: { itemName: string; amount?: number; currency?: Currency; transactions?: FioCSVData[]; }) {
 
     const [selectedCategory, setSelectedCategory] = useState<CategoryName>("other");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentTransactionIndex, setCurrentTransactionIndex] = useState(0);
 
     const loadData = () => {
         const jsonItems = localStorage.getItem("items");
@@ -50,20 +54,73 @@ function Item({ itemName, amount, currency = "CZK" }: { itemName: string; amount
         localStorage.setItem("items", JSON.stringify(newItems));
     };
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Don't open modal if clicking on the select dropdown
+        if ((e.target as HTMLElement).tagName === 'SELECT') {
+            return;
+        }
+
+        if (transactions.length > 0) {
+            setCurrentTransactionIndex(0);
+            setIsModalOpen(true);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setCurrentTransactionIndex(0);
+    };
+
+    const handleNextTransaction = () => {
+        if (currentTransactionIndex < transactions.length - 1) {
+            setCurrentTransactionIndex(currentTransactionIndex + 1);
+        }
+    };
+
+    const handlePreviousTransaction = () => {
+        if (currentTransactionIndex > 0) {
+            setCurrentTransactionIndex(currentTransactionIndex - 1);
+        }
+    };
+
     return (
-        <div className="item-card" style={{ backgroundColor: categoryColors[selectedCategory] ? categoryColors[selectedCategory] + '30' : '#ffffff' }}>
-            <select name={itemName} className="item-select" value={selectedCategory} onChange={(e) => saveCategory(e)}>
-                {categories.map((category, index) => (
-                    <option key={index} value={category}>{prettifiedCategoryNames[category]}</option>
-                ))}
-            </select>
-            <span className="item-name">{itemName}</span>
-            {amount !== undefined && (
-                <div className="item-amount" style={{ color: amount >= 0 ? 'green' : 'red' }}>
-                    {formatCurrency(amount, currency)}
-                </div>
-            )}
-        </div>
+        <>
+            <div
+                className="item-card"
+                style={{
+                    backgroundColor: categoryColors[selectedCategory] ? categoryColors[selectedCategory] + '30' : '#ffffff',
+                    cursor: transactions.length > 0 ? 'pointer' : 'default'
+                }}
+                onClick={handleCardClick}
+            >
+                <select name={itemName} className="item-select" value={selectedCategory} onChange={(e) => saveCategory(e)}>
+                    {categories.map((category, index) => (
+                        <option key={index} value={category}>{prettifiedCategoryNames[category]}</option>
+                    ))}
+                </select>
+                <span className="item-name">{itemName}</span>
+                {amount !== undefined && (
+                    <div className="item-amount" style={{ color: amount >= 0 ? 'green' : 'red' }}>
+                        {formatCurrency(amount, currency)}
+                    </div>
+                )}
+                {transactions.length > 0 && (
+                    <div className="transaction-count">
+                        {transactions.length > 1 ? `${transactions.length} transactions - ` : ''}Click for details
+                    </div>
+                )}
+            </div>
+            <TransactionModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                transaction={transactions[currentTransactionIndex] || null}
+                itemName={itemName}
+                currentIndex={currentTransactionIndex}
+                totalTransactions={transactions.length}
+                onNext={handleNextTransaction}
+                onPrevious={handlePreviousTransaction}
+            />
+        </>
     );
 }
 

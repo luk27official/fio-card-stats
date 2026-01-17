@@ -73,3 +73,15 @@
     padding-top: 8px;
     border-top: 1px solid #f0f0f0;
 }
+
+.transaction-count {
+    font-size: 0.85em;
+    color: #666;
+    font-weight: 500;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+

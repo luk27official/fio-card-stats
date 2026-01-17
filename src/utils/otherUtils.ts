@@ -162,3 +162,27 @@ export const calculateTotalSum = (data: Array<{ Objem?: string; Měna?: string; 
 
     return sum.toFixed(1);
 };
+
+export const createItemToTransactionsMap = <T>(
+    data: T[],
+    getItemName: (item: T) => string,
+    useMappedNames: boolean = true
+): Map<string, T[]> => {
+    const transactionsMap = new Map<string, T[]>();
+    const nameMapping = useMappedNames ? createTransactionNameMapping(data, getItemName) : null;
+
+    for (const item of data) {
+        if (!item) continue;
+
+        const itemName = getItemName(item);
+        const representativeName = nameMapping ? (nameMapping.get(itemName) || itemName) : itemName;
+
+        if (!transactionsMap.has(representativeName)) {
+            transactionsMap.set(representativeName, []);
+        }
+
+        transactionsMap.get(representativeName)!.push(item);
+    }
+
+    return transactionsMap;
+};
