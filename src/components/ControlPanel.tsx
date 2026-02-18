@@ -1,7 +1,6 @@
 import "./ControlPanel.css";
 import { Currency } from "../utils/otherUtils";
 import { isUsingLiveRates } from "../utils/exchangeRateService";
-import { useState, useEffect } from "react";
 
 interface ControlPanelProps {
   hideDuplicates: boolean;
@@ -11,20 +10,8 @@ interface ControlPanelProps {
 }
 
 function ControlPanel({ hideDuplicates, setHideDuplicates, selectedCurrency, setSelectedCurrency }: ControlPanelProps) {
-  const [liveRates, setLiveRates] = useState(false);
+  const liveRates = isUsingLiveRates();
 
-  useEffect(() => {
-    // Check if live rates are being used
-    const checkRates = () => {
-      setLiveRates(isUsingLiveRates());
-    };
-
-    checkRates();
-    // Re-check periodically in case rates are loaded
-    const interval = setInterval(checkRates, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
   return (
     <div className="control-panel">
       <div className="control-item">
