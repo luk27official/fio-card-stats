@@ -32,6 +32,7 @@ function App() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>("CZK");
   const [categories, setCategories] = useState<Category[]>(loadCategories);
   const [showCategoryManager, setShowCategoryManager] = useState<boolean>(false);
+  const [itemCategories, setItemCategories] = useState<Map<string, CategoryName>>(new Map());
 
   // Fetch exchange rates on app startup
   useEffect(() => {
@@ -47,9 +48,19 @@ function App() {
     }
   };
 
-  const uniqueItems = getUniqueItems(parsedData, getPaymentInformation, hideDuplicates);
-  const itemAmounts = calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency, hideDuplicates);
-  const itemTransactions = createItemToTransactionsMap(parsedData, getPaymentInformation, hideDuplicates);
+  // Only compute these expensive calculations when there's data to process
+  const hasData = parsedData.length > 0;
+  const uniqueItems = hasData ? getUniqueItems(parsedData, getPaymentInformation, hideDuplicates) : [];
+  const itemAmounts = hasData
+    ? calculateItemAmounts(parsedData, getPaymentInformation, selectedCurrency, hideDuplicates)
+    : new Map();
+  const itemTransactions = hasData
+    ? createItemToTransactionsMap(parsedData, getPaymentInformation, hideDuplicates)
+    : new Map();
+
+  const handleCategoryChange = (itemName: string, category: CategoryName) => {
+    setItemCategories((prev) => new Map(prev).set(itemName, category));
+  };
 
   const handleClick = () => {
     const nameMapping = createTransactionNameMapping(parsedData, getPaymentInformation);
@@ -57,11 +68,11 @@ function App() {
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
       const itemName = getPaymentInformation(item);
       const representativeName = nameMapping.get(itemName) || itemName;
-      const selectElement = document.getElementsByName(representativeName)[0] as unknown as HTMLSelectElement;
+      const category = itemCategories.get(representativeName) || "other";
 
       return {
         ...item,
-        category: selectElement.value as CategoryName,
+        category,
       };
     });
 
@@ -94,7 +105,8 @@ function App() {
     setShowCategoryManager(!showCategoryManager);
   };
 
-  const totalSum = calculateTotalSum(parsedData, selectedCurrency);
+  // Only calculate total sum when results are submitted and displayed
+  const totalSum = submitted && hasData ? calculateTotalSum(parsedData, selectedCurrency) : "0";
 
   return (
     <div id="main">
@@ -135,6 +147,7 @@ function App() {
                 currency={selectedCurrency}
                 transactions={itemTransactions.get(item) || []}
                 categories={categories}
+                onCategoryChange={handleCategoryChange}
                 key={item}
               />
             ))}

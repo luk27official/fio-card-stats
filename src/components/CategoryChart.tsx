@@ -37,6 +37,19 @@ const CustomTooltip = ({ active, payload, label, currency }: CustomTooltipProps)
   return null;
 };
 
+// Helper function to format date strings (moved outside component for performance)
+const formatXAxis = (dateString: string) => {
+  const [year, month, day] = dateString.split("-");
+  return `${day}.${month}.${year}`;
+};
+
+// Static style objects (defined outside to avoid recreating on every render)
+const xAxisStyle = { fontSize: "12px", fontWeight: 500 };
+const yAxisStyle = { fontSize: "12px", fontWeight: 500 };
+const legendWrapperStyle = { paddingTop: "20px" };
+const legendLabelStyle = { fontSize: "14px", fontWeight: 500 };
+const lineChartMargin = { top: 5, right: 30, left: 20, bottom: 80 };
+
 function CategoryChart({
   categorizedData,
   currency = "CZK",
@@ -93,35 +106,26 @@ function CategoryChart({
 
   const processedData = finalData;
 
-  const formatXAxis = (dateString: string) => {
-    const [year, month, day] = dateString.split("-");
-    return `${day}.${month}.${year}`;
-  };
-
   return (
     <div className="category-chart">
       <ResponsiveContainer width="100%" height={500}>
-        <LineChart data={processedData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
+        <LineChart data={processedData} margin={lineChartMargin}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" strokeOpacity={0.5} />
           <XAxis
             dataKey="date"
             tickFormatter={formatXAxis}
             stroke="#666"
-            style={{ fontSize: "12px", fontWeight: 500 }}
+            style={xAxisStyle}
             angle={-45}
             textAnchor="end"
             height={80}
           />
-          <YAxis
-            stroke="#666"
-            style={{ fontSize: "12px", fontWeight: 500 }}
-            tickFormatter={(value) => formatCurrency(value, currency)}
-          />
+          <YAxis stroke="#666" style={yAxisStyle} tickFormatter={(value) => formatCurrency(value, currency)} />
           <Tooltip content={<CustomTooltip currency={currency} />} />
           <Legend
-            wrapperStyle={{ paddingTop: "20px" }}
+            wrapperStyle={legendWrapperStyle}
             iconType="line"
-            formatter={(value) => <span style={{ fontSize: "14px", fontWeight: 500 }}>{value}</span>}
+            formatter={(value) => <span style={legendLabelStyle}>{value}</span>}
           />
           {Object.keys(categorizedData).map((category) => (
             <Line

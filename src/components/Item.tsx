@@ -11,12 +11,14 @@ function Item({
   currency = "CZK",
   transactions = [],
   categories = [],
+  onCategoryChange,
 }: {
   itemName: string;
   amount?: number;
   currency?: Currency;
   transactions?: FioCSVData[];
   categories?: Category[];
+  onCategoryChange?: (itemName: string, category: CategoryName) => void;
 }) {
   const loadData = () => {
     const jsonItems = localStorage.getItem("items");
@@ -60,6 +62,11 @@ function Item({
     newItems.push({ name: itemName, category: category });
 
     localStorage.setItem("items", JSON.stringify(newItems));
+
+    // Notify parent component
+    if (onCategoryChange) {
+      onCategoryChange(itemName, category);
+    }
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -91,16 +98,14 @@ function Item({
     }
   };
 
+  // Pre-compute style values to avoid creating new objects on every render
+  const backgroundColor = getCategoryColor(selectedCategory, categories) + "30";
+  const cursor = transactions.length > 0 ? "pointer" : "default";
+  const cardStyle = { backgroundColor, cursor };
+
   return (
     <>
-      <div
-        className="item-card"
-        style={{
-          backgroundColor: getCategoryColor(selectedCategory, categories) + "30",
-          cursor: transactions.length > 0 ? "pointer" : "default",
-        }}
-        onClick={handleCardClick}
-      >
+      <div className="item-card" style={cardStyle} onClick={handleCardClick}>
         <select name={itemName} className="item-select" value={selectedCategory} onChange={(e) => saveCategory(e)}>
           {categories.map((category, index) => (
             <option key={index} value={category.name}>

@@ -16,19 +16,19 @@ export function CategoryBaseInfo({
   currency?: Currency;
   categories?: Category[];
 }) {
-  let categorySum = 0;
-
-  categorizedData[category].forEach((item) => {
+  // Calculate category sum (React Compiler will memoize this)
+  const categorySum = categorizedData[category].reduce((sum, item) => {
     if (!item["Objem"] || !item["Měna"]) {
-      return;
+      return sum;
     }
-
     const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
-    categorySum += convertCurrency(amountInCZK, currency);
-  });
+    return sum + convertCurrency(amountInCZK, currency);
+  }, 0);
 
   const backgroundColor = getCategoryColor(category, categories);
   const tintedBackground = `linear-gradient(135deg, white 0%, ${backgroundColor}15 100%)`;
+  const categoryItemStyle = { background: tintedBackground, borderLeft: `4px solid ${backgroundColor}` };
+  const amountColorStyle = { color: categorySum >= 0 ? "green" : "red" };
 
   const handleShowDetails = () => {
     setShownDetailedCategory(category);
@@ -42,7 +42,7 @@ export function CategoryBaseInfo({
   };
 
   return (
-    <div className="category-item" style={{ background: tintedBackground, borderLeft: `4px solid ${backgroundColor}` }}>
+    <div className="category-item" style={categoryItemStyle}>
       <span className="category-name">{getCategoryPrettyName(category, categories)}</span>
       <button onClick={handleShowDetails} className="details-btn">
         Show details
@@ -50,13 +50,7 @@ export function CategoryBaseInfo({
       <div>
         <br />
         <strong>Total: </strong>
-        <span
-          style={{
-            color: categorySum >= 0 ? "green" : "red",
-          }}
-        >
-          {formatCurrency(categorySum, currency)}
-        </span>
+        <span style={amountColorStyle}>{formatCurrency(categorySum, currency)}</span>
         <br />
         <strong>Number of transactions: </strong>
         {categorizedData[category].length}
@@ -76,11 +70,13 @@ export function CategoryDetails({
   currency?: Currency;
   categories?: Category[];
 }) {
+  const theadStyle = { backgroundColor: getCategoryColor(category, categories) };
+
   return (
     <div className="category-details-wrapper">
       <div className="table-container">
         <table>
-          <thead style={{ backgroundColor: getCategoryColor(category, categories) }}>
+          <thead style={theadStyle}>
             <tr>
               <th>Payment Information</th>
               <th>Amount</th>
@@ -91,13 +87,12 @@ export function CategoryDetails({
             {categorizedData[category].map((item, index) => {
               const amountInCZK = convertToCZK(item["Objem"].replace(",", "."), item["Měna"]);
               const convertedAmount = convertCurrency(amountInCZK, currency);
+              const amountStyle = { color: convertedAmount >= 0 ? "green" : "red" };
 
               return (
                 <tr key={index}>
                   <td>{getPaymentInformation(item)}</td>
-                  <td style={{ color: convertedAmount >= 0 ? "green" : "red" }}>
-                    {formatCurrency(convertedAmount, currency)}
-                  </td>
+                  <td style={amountStyle}>{formatCurrency(convertedAmount, currency)}</td>
                   <td>{item["Datum"]}</td>
                 </tr>
               );
