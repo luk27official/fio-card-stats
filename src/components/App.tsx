@@ -1,5 +1,5 @@
 import "./App.css";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
@@ -18,6 +18,7 @@ import {
   Currency,
   createItemToTransactionsMap,
 } from "../utils/otherUtils";
+import { fetchExchangeRates } from "../utils/exchangeRateService";
 
 function App() {
   const [parsedData, setParsedData] = useState<FioCSVData[]>([]);
@@ -31,6 +32,11 @@ function App() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>("CZK");
   const [categories, setCategories] = useState<Category[]>(loadCategories);
   const [showCategoryManager, setShowCategoryManager] = useState<boolean>(false);
+
+  // Fetch exchange rates on app startup
+  useEffect(() => {
+    fetchExchangeRates();
+  }, []);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;

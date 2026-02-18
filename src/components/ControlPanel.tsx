@@ -1,5 +1,7 @@
 import "./ControlPanel.css";
 import { Currency } from "../utils/otherUtils";
+import { isUsingLiveRates } from "../utils/exchangeRateService";
+import { useState, useEffect } from "react";
 
 interface ControlPanelProps {
   hideDuplicates: boolean;
@@ -9,6 +11,20 @@ interface ControlPanelProps {
 }
 
 function ControlPanel({ hideDuplicates, setHideDuplicates, selectedCurrency, setSelectedCurrency }: ControlPanelProps) {
+  const [liveRates, setLiveRates] = useState(false);
+
+  useEffect(() => {
+    // Check if live rates are being used
+    const checkRates = () => {
+      setLiveRates(isUsingLiveRates());
+    };
+
+    checkRates();
+    // Re-check periodically in case rates are loaded
+    const interval = setInterval(checkRates, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className="control-panel">
       <div className="control-item">
@@ -39,6 +55,9 @@ function ControlPanel({ hideDuplicates, setHideDuplicates, selectedCurrency, set
             <option value="PLN">PLN (zł)</option>
           </select>
         </label>
+        <span className={`exchange-rate-badge ${liveRates ? "live" : "fallback"}`} title={liveRates ? "Using live exchange rates" : "Using fallback exchange rates"}>
+          {liveRates ? "Live rates" : "Fallback rates"}
+        </span>
       </div>
     </div>
   );

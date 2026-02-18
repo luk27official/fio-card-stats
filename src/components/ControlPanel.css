@@ -16,6 +16,7 @@
 .control-item {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .toggle-label {
@@ -93,6 +94,25 @@
 .currency-select:focus {
   border-color: #0026ff;
   box-shadow: 0 0 0 3px rgba(0, 38, 255, 0.1);
+}
+
+.exchange-rate-badge {
+  font-size: 0.75em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.exchange-rate-badge.live {
+  background: linear-gradient(135deg, #008a07, #00b309);
+  color: white;
+}
+
+.exchange-rate-badge.fallback {
+  background: #f0f0f0;
+  color: #666;
 }
 
 @media (max-width: 768px) {

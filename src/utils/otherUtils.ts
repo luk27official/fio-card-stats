@@ -1,11 +1,6 @@
-export type Currency = "CZK" | "EUR" | "USD" | "GBP" | "PLN";
+import { getExchangeRates } from "./exchangeRateService";
 
-const exchangeRates: Record<string, number> = {
-  EUR: 25,
-  USD: 23,
-  GBP: 30,
-  PLN: 6,
-};
+export type Currency = "CZK" | "EUR" | "USD" | "GBP" | "PLN";
 
 export const convertToCZK = (amount: string, currency: string) => {
   const parsedAmount = parseFloat(amount);
@@ -13,6 +8,8 @@ export const convertToCZK = (amount: string, currency: string) => {
   if (currency === "CZK") {
     return parsedAmount;
   }
+
+  const exchangeRates = getExchangeRates();
 
   if (exchangeRates[currency]) {
     return parsedAmount * exchangeRates[currency];
@@ -26,6 +23,7 @@ export const convertCurrency = (amountInCZK: number, targetCurrency: Currency): 
     return amountInCZK;
   }
 
+  const exchangeRates = getExchangeRates();
   return amountInCZK / exchangeRates[targetCurrency];
 };
 
