@@ -1,17 +1,17 @@
 .category-chart {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
 }
 
 @media (max-width: 768px) {
-    .category-chart {
-        padding: 8px;
-        width: 100%;
-        min-width: 100%;
-    }
+  .category-chart {
+    padding: 8px;
+    width: 100%;
+    min-width: 100%;
+  }
 }

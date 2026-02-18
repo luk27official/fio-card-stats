@@ -1,137 +1,137 @@
 .details-btn {
-    display: block;
-    background: linear-gradient(135deg, #0026ff, #008a07);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 38, 255, 0.2);
-    padding: 10px 20px;
-    width: fit-content;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
+  display: block;
+  background: linear-gradient(135deg, #0026ff, #008a07);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 38, 255, 0.2);
+  padding: 10px 20px;
+  width: fit-content;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .details-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 38, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 38, 255, 0.3);
 }
 
 .category-name {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: #333;
-    text-shadow: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #333;
+  text-shadow: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 20px 0;
-    font-size: 16px;
-    text-align: left;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 th,
 td {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f0f0f0;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 thead {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 th {
-    color: white;
-    font-weight: 600;
-    text-align: center;
-    font-size: 1em;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1em;
 }
 
 tr:nth-child(even) {
-    background-color: #fafbfc;
+  background-color: #fafbfc;
 }
 
 tbody tr {
-    transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 tbody tr:hover {
-    background-color: #f0f4f8;
+  background-color: #f0f4f8;
 }
 
 tbody tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 td:nth-child(2) {
-    text-align: right;
-    font-weight: 600;
+  text-align: right;
+  font-weight: 600;
 }
 
 .category-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px;
-    flex-direction: column;
-    gap: 12px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  flex-direction: column;
+  gap: 12px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 .category-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .category-detailed {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .category-details-wrapper {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .table-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 768px) {
-    th,
-    td {
-        padding: 8px 10px;
-        font-size: 13px;
-    }
+  th,
+  td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
 
-    td:nth-child(1) {
-        max-width: 180px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+  td:nth-child(1) {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    th:nth-child(2),
-    td:nth-child(2) {
-        white-space: nowrap;
-    }
+  th:nth-child(2),
+  td:nth-child(2) {
+    white-space: nowrap;
+  }
 
-    .category-name {
-        font-size: 1.5em;
-    }
+  .category-name {
+    font-size: 1.5em;
+  }
 }
