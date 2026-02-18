@@ -8,7 +8,7 @@ import HelpSection from "./HelpSection";
 import ControlPanel from "./ControlPanel";
 import ResultsSection from "./ResultsSection";
 import CategoryManager from "./CategoryManager";
-import { CategoryName, Category, loadCategories, saveCategories } from "../utils/customTypes";
+import { CategoryName, Category, loadCategories, saveCategories, defaultCategoryMapping } from "../utils/customTypes";
 import {
   calculateTotalSum,
   getUniqueItems,
@@ -32,7 +32,14 @@ function App() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>("CZK");
   const [categories, setCategories] = useState<Category[]>(loadCategories);
   const [showCategoryManager, setShowCategoryManager] = useState<boolean>(false);
-  const [itemCategories, setItemCategories] = useState<Map<string, CategoryName>>(new Map());
+  const [itemCategories, setItemCategories] = useState<Map<string, CategoryName>>(() => {
+    // Initialize from localStorage
+    const jsonItems = localStorage.getItem("items");
+    if (!jsonItems) return new Map();
+
+    const itemsParsed = JSON.parse(jsonItems) as Array<{ name: string; category: CategoryName }>;
+    return new Map(itemsParsed.map((item) => [item.name, item.category]));
+  });
 
   // Fetch exchange rates on app startup
   useEffect(() => {
@@ -68,7 +75,24 @@ function App() {
     const data: CategorizedFioCSVData[] = parsedData.map((item) => {
       const itemName = getPaymentInformation(item);
       const representativeName = nameMapping.get(itemName) || itemName;
-      const category = itemCategories.get(representativeName) || "other";
+
+      // Get category using same logic as Item component's getInitialCategory
+      let category = itemCategories.get(representativeName);
+
+      if (!category) {
+        // Check defaultCategoryMapping for a match
+        for (const key of Object.keys(defaultCategoryMapping)) {
+          if (representativeName.toLowerCase().includes(key)) {
+            category = defaultCategoryMapping[key];
+            break;
+          }
+        }
+      }
+
+      // Default to "other" if no match found
+      if (!category) {
+        category = "other";
+      }
 
       return {
         ...item,
