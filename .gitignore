@@ -26,3 +26,6 @@ dist-ssr
 
 data/*
 bun.lockb
+bun.lock
+package-lock.json
+yarn.lock
