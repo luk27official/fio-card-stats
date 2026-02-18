@@ -1,5 +1,5 @@
-import './App.css';
-import { ChangeEvent, useState } from 'react';
+import "./App.css";
+import { ChangeEvent, useState } from "react";
 import { loadCSV, parseCSV, FioCSVData, CategorizedFioCSVData, getPaymentInformation } from "../utils/csvUtils";
 import Item from "./Item";
 import FileInput from "./FileInput";
@@ -7,18 +7,30 @@ import Header from "./Header";
 import HelpSection from "./HelpSection";
 import ControlPanel from "./ControlPanel";
 import ResultsSection from "./ResultsSection";
-import { CategoryName } from "../utils/customTypes";
-import { calculateTotalSum, getUniqueItems, groupDataByCategory, createTransactionNameMapping, calculateItemAmounts, Currency, createItemToTransactionsMap } from "../utils/otherUtils";
-
+import CategoryManager from "./CategoryManager";
+import { CategoryName, Category, loadCategories, saveCategories } from "../utils/customTypes";
+import {
+  calculateTotalSum,
+  getUniqueItems,
+  groupDataByCategory,
+  createTransactionNameMapping,
+  calculateItemAmounts,
+  Currency,
+  createItemToTransactionsMap,
+} from "../utils/otherUtils";
 
 function App() {
   const [parsedData, setParsedData] = useState<FioCSVData[]>([]);
-  const [categorizedData, setCategorizedData] = useState<Record<CategoryName, CategorizedFioCSVData[]>>(() => ({} as Record<CategoryName, CategorizedFioCSVData[]>));
+  const [categorizedData, setCategorizedData] = useState<Record<CategoryName, CategorizedFioCSVData[]>>(
+    () => ({}) as Record<CategoryName, CategorizedFioCSVData[]>
+  );
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const [shownDetailedCategory, setShownDetailedCategory] = useState<CategoryName | null>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>("CZK");
+  const [categories, setCategories] = useState<Category[]>(loadCategories);
+  const [showCategoryManager, setShowCategoryManager] = useState<boolean>(false);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const files = (e.target as HTMLInputElement).files;
@@ -43,7 +55,7 @@ function App() {
 
       return {
         ...item,
-        category: selectElement.value as CategoryName
+        category: selectElement.value as CategoryName,
       };
     });
 
@@ -63,19 +75,40 @@ function App() {
       const data = await response.text();
       setParsedData(parseCSV(data));
     } catch (error) {
-      console.error('Failed to load example CSV:', error);
+      console.error("Failed to load example CSV:", error);
     }
+  };
+
+  const handleCategoriesUpdate = (updatedCategories: Category[]) => {
+    setCategories(updatedCategories);
+    saveCategories(updatedCategories);
+  };
+
+  const handleCategoryManagerToggle = () => {
+    setShowCategoryManager(!showCategoryManager);
   };
 
   const totalSum = calculateTotalSum(parsedData, selectedCurrency);
 
   return (
     <div id="main">
-      <Header onHelpClick={handleHelpClick} onExampleClick={handleExampleClick} />
+      <Header
+        onHelpClick={handleHelpClick}
+        onExampleClick={handleExampleClick}
+        onCategoryManagerClick={handleCategoryManagerToggle}
+      />
 
       {showHelp && <HelpSection onClose={handleHelpClick} />}
 
-      {!showHelp && (
+      {showCategoryManager && (
+        <CategoryManager
+          categories={categories}
+          onUpdate={handleCategoriesUpdate}
+          onClose={handleCategoryManagerToggle}
+        />
+      )}
+
+      {!showHelp && !showCategoryManager && (
         <>
           <FileInput onChange={onChange} />
 
@@ -95,18 +128,14 @@ function App() {
                 amount={itemAmounts.get(item)}
                 currency={selectedCurrency}
                 transactions={itemTransactions.get(item) || []}
+                categories={categories}
                 key={item}
               />
             ))}
           </div>
 
           {parsedData.length > 0 && (
-            <input
-              type="submit"
-              value="Submit"
-              onClick={handleClick}
-              className="submit-button"
-            />
+            <input type="submit" value="Submit" onClick={handleClick} className="submit-button" />
           )}
 
           {submitted && (
@@ -116,6 +145,7 @@ function App() {
               totalSum={totalSum}
               shownDetailedCategory={shownDetailedCategory}
               setShownDetailedCategory={setShownDetailedCategory}
+              categories={categories}
             />
           )}
         </>
