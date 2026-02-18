@@ -55,7 +55,10 @@ function ControlPanel({ hideDuplicates, setHideDuplicates, selectedCurrency, set
             <option value="PLN">PLN (zł)</option>
           </select>
         </label>
-        <span className={`exchange-rate-badge ${liveRates ? "live" : "fallback"}`} title={liveRates ? "Using live exchange rates" : "Using fallback exchange rates"}>
+        <span
+          className={`exchange-rate-badge ${liveRates ? "live" : "fallback"}`}
+          title={liveRates ? "Using live exchange rates" : "Using fallback exchange rates"}
+        >
           {liveRates ? "Live rates" : "Fallback rates"}
         </span>
       </div>
